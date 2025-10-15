@@ -1,5 +1,5 @@
 # ---- Builder Stage ----
-FROM haskell:9.2.8-bullseye AS builder
+FROM haskell:9.10.2-bullseye AS builder
 
 RUN apt-get update -qq && \
     apt-get install -qq -y libpcre3 libpcre3-dev build-essential pkg-config curl --no-install-recommends && \
@@ -11,8 +11,10 @@ COPY . .
 
 ENV LANG=C.UTF-8
 
-# Stack setup and build
-RUN stack setup --install-ghc && stack build --only-dependencies
+# Ensure Stack uses its own GHC version (not system)
+RUN stack config set system-ghc --global false
+RUN stack setup --install-ghc
+RUN stack build --only-dependencies
 RUN stack install
 
 # ---- Runtime Stage ----
