@@ -23,7 +23,7 @@ ADD . .
 # '-j1' flag to force the build to run sequentially.
 RUN stack install
 
-FROM debian:buster
+FROM debian:bookworm
 
 ENV LANG C.UTF-8
 
