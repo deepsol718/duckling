@@ -1,7 +1,6 @@
 # ---- Builder Stage ----
-FROM haskell:9.12.2-bookworm AS builder
+FROM haskell:9.2.8-bullseye AS builder
 
-# Install dependencies
 RUN apt-get update -qq && \
     apt-get install -qq -y libpcre3 libpcre3-dev build-essential pkg-config curl --no-install-recommends && \
     apt-get clean && \
@@ -13,11 +12,11 @@ COPY . .
 ENV LANG=C.UTF-8
 
 # Stack setup and build
-RUN stack setup && stack build --only-dependencies
+RUN stack setup --install-ghc && stack build --only-dependencies
 RUN stack install
 
 # ---- Runtime Stage ----
-FROM debian:bookworm
+FROM debian:bullseye
 
 ENV LANG C.UTF-8
 
